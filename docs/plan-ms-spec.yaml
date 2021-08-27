@@ -1,0 +1,285 @@
+openapi: 3.0.2
+info:
+  version: 1.0.0
+  title: Plan API
+  description: |
+    This is the OpenAPI v3 specification for a Plan List Microservice.
+    Data is being saved on MongoDB.
+servers:
+  - url: http://{domain}:{port}/api/{version}
+    variables:
+      domain:
+        default: localhost
+        description: Hostname
+      port:
+        default: '8080'
+        description: Port
+      version:
+        default: v1
+        enum:
+          - v1
+paths:
+  /plan/{planId}:
+    get:
+      description: 'Fetches a single Plan based on a given Plan ID'
+      operationId: getPlanById
+      parameters:
+        - name: planId
+          in: path
+          description: 'ID of the Plan List to be fetched'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Fetched Plan Item'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        405:
+          $ref: '#/components/responses/NotAllowed'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        501:
+          $ref: '#/components/responses/NotImplemented'
+        503:
+          $ref: '#/components/responses/ServiceUnavailable'
+    patch:
+      description: 'updates an existing plan item'
+      operationId: updatePlan
+      parameters:
+        - name: planId
+          in: path
+          description: 'ID of the plan item'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plan'
+      responses:
+        200:
+          description: 'Created Plan Item'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        405:
+          $ref: '#/components/responses/NotAllowed'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        501:
+          $ref: '#/components/responses/NotImplemented'
+        503:
+          $ref: '#/components/responses/ServiceUnavailable'
+    delete:
+      description: 'delete an existing plan item'
+      operationId: deletePlan
+      parameters:
+        - name: planId
+          in: path
+          description: 'ID of the Plan item'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Created Plan Item'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        405:
+          $ref: '#/components/responses/NotAllowed'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        501:
+          $ref: '#/components/responses/NotImplemented'
+        503:
+          $ref: '#/components/responses/ServiceUnavailable'
+  /plan/:
+    get:
+      description: 'Fetches a list of plans which can be queried based on the filters given below'
+      operationId: getPlansWithFilter
+      parameters:
+        - name: frequency
+          in: query
+          description: 'The frequency of the Plan item'
+          schema:
+            $ref: '#/components/schemas/Frequency'
+        - name: startTime
+          in: query
+          description: 'The due time of the Plan item'
+          schema:
+            type: string
+            nullable: true
+            format: date-time
+        - name: endTime
+          in: query
+          description: 'The completion time of the Plan item'
+          schema:
+            type: string
+            nullable: true
+            format: date-time
+      responses:
+        200:
+          description: A Json array of Plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plan'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        405:
+          $ref: '#/components/responses/NotAllowed'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        501:
+          $ref: '#/components/responses/NotImplemented'
+        503:
+          $ref: '#/components/responses/ServiceUnavailable'
+    post:
+      description: 'creates a new plan item'
+      operationId: createPlan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plan'
+      responses:
+        200:
+          description: 'Created Plan Item'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        405:
+          $ref: '#/components/responses/NotAllowed'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        501:
+          $ref: '#/components/responses/NotImplemented'
+        503:
+          $ref: '#/components/responses/ServiceUnavailable'
+components:
+  schemas:
+    Plan:
+      type: object
+      properties:
+        id:
+          type: string
+          description: 'The ID of the plan'
+          example: 'b517357a-0734-11ec-9a03-0242ac130003'
+        name:
+          type: string
+          description: 'Name of the plan item'
+          example: 'Plan Item 1'
+        frequency:
+          $ref: '#/components/schemas/Frequency'
+        startTime:
+          type: string
+          format: yyyy-MM-dd'T'HH:mm:ssZ
+          description: 'The date on which the plan is due'
+          example: '2021-01-30T08:30:00Z'
+        endTime:
+          type: string
+          format: yyyy-MM-dd'T'HH:mm:ssZ
+          description: 'The date and time when the plan was completed'
+          example: '2021-01-30T08:30:00Z'
+    Error:
+      type: object
+      properties:
+        errorCode:
+          type: string
+          description: 'Denotes the error code'
+          example: 'ERR-01'
+        errorMessage:
+          type: string
+          description: 'The complete error message'
+          example: 'This is an error message and description'
+    Frequency:
+      type: string
+      enum:
+        - NONE
+        - DAILY
+        - MONTHLY
+      example: 'NONE'
+      
+  responses:
+    NotFound:
+      description: 'Returned when the page is not found'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: 'Returned when the user is not authorized to access the endpoint'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: 'Returned when the user is forbidden to access the endpoint'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotAllowed:
+      description: 'Returned when the user uses an incorrect method to access the endpoint'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    InternalServerError:
+      description: 'Returned when the an internal server error occurs'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotImplemented:
+      description: 'Returned when a functionality is not implemented'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServiceUnavailable:
+      description: 'Returned when the service is unavailable'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
