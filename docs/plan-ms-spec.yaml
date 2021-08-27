@@ -124,6 +124,11 @@ paths:
       description: 'Fetches a list of plans which can be queried based on the filters given below'
       operationId: getPlansWithFilter
       parameters:
+        - name: recurrenceId
+          in: query
+          description: 'The recurrenceId of the Plan item'
+          schema:
+            type: string
         - name: frequency
           in: query
           description: 'The frequency of the Plan item'
@@ -196,6 +201,108 @@ paths:
           $ref: '#/components/responses/NotImplemented'
         503:
           $ref: '#/components/responses/ServiceUnavailable'
+  /recurrence/{recurrenceId}:
+    get:
+      description: 'Fetches a single Plan based on a given Plan ID'
+      operationId: getPlansByRecurrenceId
+      parameters:
+        - name: recurrenceId
+          in: path
+          description: 'Plan List to be identified by recurrenceId'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: A Json array of Plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Plan'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        405:
+          $ref: '#/components/responses/NotAllowed'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        501:
+          $ref: '#/components/responses/NotImplemented'
+        503:
+          $ref: '#/components/responses/ServiceUnavailable'
+    patch:
+      description: 'updates an existing plan item'
+      operationId: updatePlansByRecurrenceId
+      parameters:
+        - name: recurrenceId
+          in: path
+          description: 'Plan List to be identified by recurrenceId'
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plan'
+      responses:
+        200:
+          description: 'Created Plan Item'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        405:
+          $ref: '#/components/responses/NotAllowed'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        501:
+          $ref: '#/components/responses/NotImplemented'
+        503:
+          $ref: '#/components/responses/ServiceUnavailable'
+    delete:
+      description: 'delete an existing plan item'
+      operationId: deletePlansByRecurrenceId
+      parameters:
+        - name: recurrenceId
+          in: path
+          description: 'the Plan items to be updated identified by recurrenceId'
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: 'Deleted Plan Item identified by recurrenceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        404:
+          $ref: '#/components/responses/NotFound'
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        405:
+          $ref: '#/components/responses/NotAllowed'
+        500:
+          $ref: '#/components/responses/InternalServerError'
+        501:
+          $ref: '#/components/responses/NotImplemented'
+        503:
+          $ref: '#/components/responses/ServiceUnavailable'
 components:
   schemas:
     Plan:
@@ -204,6 +311,10 @@ components:
         id:
           type: string
           description: 'The ID of the plan'
+          example: 'b517357a-0734-11ec-9a03-0242ac130003'
+        recurrenceId:
+          type: string
+          description: 'The id of recurrence'
           example: 'b517357a-0734-11ec-9a03-0242ac130003'
         name:
           type: string
@@ -235,11 +346,11 @@ components:
     Frequency:
       type: string
       enum:
-        - NONE
+        - ONCE
         - DAILY
         - MONTHLY
-      example: 'NONE'
-      
+      example: 'ONCE'
+
   responses:
     NotFound:
       description: 'Returned when the page is not found'
