@@ -129,11 +129,6 @@ paths:
           description: 'The recurrenceId of the Plan item'
           schema:
             type: string
-        - name: frequency
-          in: query
-          description: 'The frequency of the Plan item'
-          schema:
-            $ref: '#/components/schemas/Frequency'
         - name: startTime
           in: query
           description: 'The due time of the Plan item'
@@ -253,11 +248,11 @@ paths:
               $ref: '#/components/schemas/Plan'
       responses:
         200:
-          description: 'Created Plan Item'
+          description: 'Updated Plan Items by recurrenceId'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Plan'
+                $ref: '#/components/schemas/Response'
         404:
           $ref: '#/components/responses/NotFound'
         401:
@@ -284,11 +279,11 @@ paths:
             type: string
       responses:
         200:
-          description: 'Deleted Plan Item identified by recurrenceId'
+          description: 'Deleted Plan Items by recurrenceId'
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Plan'
+                $ref: '#/components/schemas/Response'
         404:
           $ref: '#/components/responses/NotFound'
         401:
@@ -343,6 +338,17 @@ components:
           type: string
           description: 'The complete error message'
           example: 'This is an error message and description'
+    Response:
+      type: object
+      properties:
+        code:
+          type: string
+          description: 'denotes the response code'
+          example: '200'
+        message:
+          type: string
+          description: 'denotes response message'
+          example: 'This is an response description'
     Frequency:
       type: string
       enum:
