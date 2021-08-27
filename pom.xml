@@ -15,7 +15,7 @@
     <description>Plan Management Microservice</description>
     <properties>
         <java.version>11</java.version>
-        <package.path>io.todo.task</package.path>
+        <package.path>io.todo.plan</package.path>
         <swagger.annotations.version>1.5.22</swagger.annotations.version>
         <jackson.databind.nullable>0.2.1</jackson.databind.nullable>
         <mapstruct.version>1.4.2.Final</mapstruct.version>
